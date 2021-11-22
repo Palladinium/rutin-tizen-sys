@@ -44,9 +44,15 @@ fn main() {
     let tizen_libs = vec![
         make_appfw_lib_context(),
         make_system_settings_lib_context(),
+        make_system_info_lib_context(),
+        make_system_info_type_context(),
         make_dlog_lib_context(),
+        make_ecore_lib_context(),
+        make_eina_lib_context(),
+        make_efl_extension_events_context(),
         make_elementary_lib_context(),
         make_evas_lib_context(),
+        make_evas_gl_lib_context(),
     ];
 
     let mut builder = bindgen::Builder::default().clang_args(tizen_ctx.sys_clang_args());
@@ -105,6 +111,28 @@ fn make_system_settings_lib_context() -> TizenLibContext {
     }
 }
 
+fn make_system_info_lib_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/system/system_info.h".to_string(),
+        link_lib: vec!["capi-system-info".to_string()],
+        includes: vec![],
+        whitelist_functions: vec!["system_.*".to_string()],
+        whitelist_types: vec!["system_.*".to_string()],
+        whitelist_vars: vec!["SYSTEM_.*".to_string()],
+    }
+}
+
+fn make_system_info_type_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/system/system_info_type.h".to_string(),
+        link_lib: vec!["capi-system-info".to_string()],
+        includes: vec![],
+        whitelist_functions: vec!["system_.*".to_string()],
+        whitelist_types: vec!["system_.*".to_string()],
+        whitelist_vars: vec!["SYSTEM_.*".to_string()],
+    }
+}
+
 fn make_dlog_lib_context() -> TizenLibContext {
     TizenLibContext {
         header_path: "/usr/include/dlog/dlog.h".to_string(),
@@ -116,12 +144,51 @@ fn make_dlog_lib_context() -> TizenLibContext {
     }
 }
 
+fn make_efl_extension_events_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/efl-extension/efl_extension_events.h".to_string(),
+        link_lib: vec!["efl-extension".to_string()],
+        includes: vec![],
+        whitelist_functions: vec!["eext_.*".to_string()],
+        whitelist_types: vec!["Eext_.*".to_string()],
+        whitelist_vars: vec!["Eext_.*".to_string()],
+    }
+}
+
+fn make_ecore_lib_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/ecore-1/Ecore.h".to_string(),
+        link_lib: vec!["ecore".to_string()],
+        includes: vec![
+            "/usr/include/ecore-1".to_string(),
+        ],
+        whitelist_functions: vec!["ecore.*".to_string()],
+        whitelist_types: vec!["Ecore_.*".to_string()],
+        whitelist_vars: vec!["ECORE_.*".to_string()],
+    }
+}
+
+fn make_eina_lib_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/eina-1/Eina.h".to_string(),
+        link_lib: vec!["eina".to_string()],
+        includes: vec![
+            "/usr/include/eina-1".to_string(),
+            "/usr/include/eina-1/eina".to_string(),
+        ],
+        whitelist_functions: vec!["eina.*".to_string()],
+        whitelist_types: vec!["Eina_.*".to_string()],
+        whitelist_vars: vec!["EINA_.*".to_string()],
+    }
+}
+
 fn make_elementary_lib_context() -> TizenLibContext {
     TizenLibContext {
         header_path: "/usr/include/elementary-1/Elementary.h".to_string(),
-        link_lib: vec!["elementary".to_string()],
+        link_lib: vec!["elementary".to_string(), "efl-extension".to_string()],
         includes: vec![
             "/usr/include/efl-1".to_string(),
+            "/usr/include/efl-extension".to_string(),
             "/usr/include/eina-1".to_string(),
             "/usr/include/eina-1/eina".to_string(),
             "/usr/include/eet-1".to_string(),
@@ -143,6 +210,24 @@ fn make_elementary_lib_context() -> TizenLibContext {
         whitelist_functions: vec!["elm_.*".to_string()],
         whitelist_types: vec!["Elm_.*".to_string()],
         whitelist_vars: vec!["ELM_.*".to_string()],
+    }
+}
+
+fn make_evas_gl_lib_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/evas-1/Evas_GL.h".to_string(),
+        link_lib: vec!["evas".to_string(), "GLESv2".to_string()],
+        includes: vec![
+            "/usr/include/evas-1".to_string(),
+            "/usr/include/efl-1".to_string(),
+            "/usr/include/eina-1".to_string(),
+            "/usr/include/eina-1/eina".to_string(),
+            "/usr/include/eo-1".to_string(),
+            "/usr/include/emile-1".to_string(),
+        ],
+        whitelist_functions: vec!["evas_.*".to_string()],
+        whitelist_types: vec!["Evas.*".to_string(), "GL.*".to_string()],
+        whitelist_vars: vec!["EVAS_.*".to_string(), "GL_.*".to_string()],
     }
 }
 
