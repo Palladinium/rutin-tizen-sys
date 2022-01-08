@@ -53,6 +53,7 @@ fn main() {
         make_elementary_lib_context(),
         make_evas_lib_context(),
         make_evas_gl_lib_context(),
+        make_sensor_lib_context(),
     ];
 
     let mut builder = bindgen::Builder::default().clang_args(tizen_ctx.sys_clang_args());
@@ -159,9 +160,7 @@ fn make_ecore_lib_context() -> TizenLibContext {
     TizenLibContext {
         header_path: "/usr/include/ecore-1/Ecore.h".to_string(),
         link_lib: vec!["ecore".to_string()],
-        includes: vec![
-            "/usr/include/ecore-1".to_string(),
-        ],
+        includes: vec!["/usr/include/ecore-1".to_string()],
         whitelist_functions: vec!["ecore.*".to_string()],
         whitelist_types: vec!["Ecore_.*".to_string()],
         whitelist_vars: vec!["ECORE_.*".to_string()],
@@ -246,5 +245,16 @@ fn make_evas_lib_context() -> TizenLibContext {
         whitelist_functions: vec!["evas_.*".to_string()],
         whitelist_types: vec!["Evas.*".to_string()],
         whitelist_vars: vec!["EVAS_.*".to_string()],
+    }
+}
+
+fn make_sensor_lib_context() -> TizenLibContext {
+    TizenLibContext {
+        header_path: "/usr/include/sensor/sensor.h".to_string(),
+        link_lib: vec!["capi-system-sensor".to_string()],
+        includes: vec![],
+        whitelist_functions: vec!["sensor_.*".to_string()],
+        whitelist_types: vec!["sensor.*".to_string()],
+        whitelist_vars: vec!["SENSOR_.*".to_string()],
     }
 }
